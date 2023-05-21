@@ -19,6 +19,8 @@ class User(AbstractUser):
     last_name = None  # type: ignore
     email = EmailField(_("email address"), unique=True)
     username = None  # type: ignore
+    phone = CharField(_("phone"), max_length=14, blank=True)
+    cpf = CharField("CPF", max_length=11, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
