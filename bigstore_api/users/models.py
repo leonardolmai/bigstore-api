@@ -1,5 +1,6 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField, EmailField
+from django.db.models import CASCADE, BooleanField, CharField, EmailField, ForeignKey, Model, OneToOneField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -35,3 +36,28 @@ class User(AbstractUser):
 
         """
         return reverse("users:detail", kwargs={"pk": self.id})
+
+
+class Company(Model):
+    name = CharField(_("Name of Company"), max_length=255)
+    cnpj = CharField("CNPJ", max_length=14, unique=True)
+    website = CharField(_("website"), blank=True, max_length=255)
+    owner = OneToOneField(settings.AUTH_USER_MODEL, on_delete=CASCADE, related_name="company")
+    is_active = BooleanField(
+        _("active"),
+        default=True,
+        help_text=_(
+            "Designates whether this company should be treated as active. "
+            "Unselect this instead of deleting company."
+        ),
+    )
+
+
+class UserCompany(Model):
+    user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE, related_name="companies")
+    company = ForeignKey(Company, on_delete=CASCADE, related_name="users")
+    is_employee = BooleanField(
+        _("employee"),
+        default=False,
+        help_text=_("Designates whether the user is an employee or just a customer " "of the company."),
+    )
