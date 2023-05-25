@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import CASCADE, BooleanField, CharField, EmailField, ForeignKey, Model, OneToOneField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -37,6 +38,16 @@ class User(AbstractUser):
         """
         return reverse("users:detail", kwargs={"pk": self.id})
 
+    def delete(self, *args, **kwargs):
+        self.is_active = False
+        self.save()
+
+        try:
+            if self.company and self.company.is_active:
+                self.company.delete()
+        except ObjectDoesNotExist:
+            pass
+
 
 class Company(Model):
     name = CharField(_("Name of Company"), max_length=255)
@@ -51,6 +62,10 @@ class Company(Model):
             "Unselect this instead of deleting company."
         ),
     )
+
+    def delete(self, *args, **kwargs):
+        self.is_active = False
+        self.save()
 
 
 class UserCompany(Model):
