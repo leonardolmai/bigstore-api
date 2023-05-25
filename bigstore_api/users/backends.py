@@ -21,3 +21,6 @@ class UserActivationBackend(ModelBackend):
                 pass
 
         return user
+
+    def user_can_authenticate(self, user):
+        return True
