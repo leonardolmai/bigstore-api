@@ -47,3 +47,28 @@ class UserSerializer(serializers.ModelSerializer):
             return user
         except IntegrityError:
             raise serializers.ValidationError("Email address already exists.")
+
+
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ["id", "name", "cnpj", "website", "owner", "is_active"]
+        read_only_fields = ["id", "owner"]
+
+    def create(self, validated_data):
+        user = self.context.get("request").user
+
+        try:
+            company = Company.objects.create(owner=user, **validated_data)
+            UserCompany.objects.create(user=user, company=company, is_employee=True)
+
+            return company
+        except IntegrityError:
+            raise serializers.ValidationError("User already has a company.")
+
+
+class UserCompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserCompany
+        fields = ["id", "user_id", "company_id", "is_employee"]
+        read_only_fields = ["id", "user_id", "company_id"]
