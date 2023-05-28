@@ -138,6 +138,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "bigstore_api.middleware.cnpj_middleware.CNPJRequiredMiddleware",
 ]
 
 # STATIC
