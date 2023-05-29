@@ -6,7 +6,7 @@ class CNPJRequiredMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        excluded_paths = ["/api/docs/", "/api/schema/"]
+        excluded_paths = ["/api/docs/", "/api/schema/", "/api/"]
 
         if request.path.startswith("/api/") and request.path not in excluded_paths:
             cnpj = request.headers.get("x-company-cnpj")
