@@ -1,11 +1,12 @@
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from bigstore_api.users.models import Company
+from bigstore_api.users.models import Company, UserCompany
 
 from .serializers import CompanySerializer, UserSerializer
 
@@ -40,3 +41,35 @@ class CompanyViewSet(ModelViewSet):
     def get_queryset(self, *args, **kwargs):
         assert isinstance(self.request.user.id, int)
         return self.queryset.filter(owner=self.request.user.id)
+
+    @action(detail=True, methods=["GET", "POST", "DELETE"])
+    def employees(self, request, pk):
+        company = get_object_or_404(Company, pk=pk)
+
+        if request.method == "GET":
+            employees = company.users.filter(is_employee=True)
+            serializer = UserSerializer(employees, many=True)
+            return Response(serializer.data)
+
+        email = request.data.get("email")
+
+        if not email:
+            return Response({"detail": "Email is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = get_object_or_404(User, email=email)
+
+        if request.method == "POST":
+            try:
+                user_company = UserCompany.objects.get(user=user, company=company)
+                if user_company.is_employee:
+                    return Response({"detail": "Employee already exists."}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    user_company.is_employee = True
+                    user_company.save()
+                    return Response({"detail": "Employee added successfully."}, status=status.HTTP_201_CREATED)
+            except UserCompany.DoesNotExist:
+                UserCompany.objects.create(user=user, company=company, is_employee=True)
+                return Response({"detail": "Employee added successfully."}, status=status.HTTP_201_CREATED)
+        elif request.method == "DELETE":
+            UserCompany.objects.filter(user=user, company=company, is_employee=True).update(is_employee=False)
+            return Response({"detail": "Employee removed successfully."}, status=status.HTTP_204_NO_CONTENT)
