@@ -47,7 +47,8 @@ class CompanyViewSet(ModelViewSet):
         company = get_object_or_404(Company, pk=pk)
 
         if request.method == "GET":
-            employees = company.users.filter(is_employee=True)
+            user_companies = company.users.filter(is_employee=True)
+            employees = [user_company.user for user_company in user_companies]
             serializer = UserSerializer(employees, many=True)
             return Response(serializer.data)
 
