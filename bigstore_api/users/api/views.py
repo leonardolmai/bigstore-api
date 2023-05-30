@@ -46,6 +46,11 @@ class CompanyViewSet(ModelViewSet):
     def employees(self, request, pk):
         company = get_object_or_404(Company, pk=pk)
 
+        if request.user != company.owner:
+            return Response(
+                {"detail": "You are not authorized to access this resource."}, status=status.HTTP_403_FORBIDDEN
+            )
+
         if request.method == "GET":
             user_companies = company.users.filter(is_employee=True)
             employees = [user_company.user for user_company in user_companies]
@@ -72,5 +77,10 @@ class CompanyViewSet(ModelViewSet):
                 UserCompany.objects.create(user=user, company=company, is_employee=True)
                 return Response({"detail": "Employee added successfully."}, status=status.HTTP_201_CREATED)
         elif request.method == "DELETE":
+            if user == company.owner:
+                return Response(
+                    {"detail": "The company owner cannot be removed as an employee."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             UserCompany.objects.filter(user=user, company=company, is_employee=True).update(is_employee=False)
             return Response({"detail": "Employee removed successfully."}, status=status.HTTP_204_NO_CONTENT)
