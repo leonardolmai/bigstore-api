@@ -8,32 +8,20 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(required=False)
-    password = serializers.CharField(write_only=True, required=False)
-    company_cnpj = serializers.CharField(write_only=True, required=False)
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
-        fields = ["id", "name", "email", "password", "cpf", "phone", "company_cnpj"]
+        fields = ["id", "name", "email", "password", "cpf", "phone"]
         read_only_fields = ["id"]
 
         extra_kwargs = {
             "url": {"view_name": "api:user-detail", "lookup_field": "pk"},
         }
 
-    def get_fields(self):
-        fields = super().get_fields()
-        request = self.context.get("request")
-
-        if request and request.method == "POST":
-            fields["email"].required = True
-            fields["password"].required = True
-            fields["company_cnpj"].required = True
-
-        return fields
-
     def create(self, validated_data):
-        company_cnpj = validated_data.pop("company_cnpj")
+        company_cnpj = self.context.get("request").headers.get("x-company-cnpj")
 
         try:
             company = Company.objects.get(cnpj=company_cnpj)
