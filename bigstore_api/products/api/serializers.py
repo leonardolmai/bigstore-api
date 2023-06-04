@@ -18,6 +18,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "price",
+            "quantity",
             "description",
             "is_approved",
             "created_by",
