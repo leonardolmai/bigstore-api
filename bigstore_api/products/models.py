@@ -1,6 +1,16 @@
 from django.conf import settings
 from django.core.validators import MinValueValidator
-from django.db.models import CASCADE, BooleanField, CharField, FloatField, ForeignKey, ImageField, Model, TextField
+from django.db.models import (
+    CASCADE,
+    BooleanField,
+    CharField,
+    FloatField,
+    ForeignKey,
+    ImageField,
+    Model,
+    PositiveIntegerField,
+    TextField,
+)
 from django.utils.translation import gettext as _
 
 from bigstore_api.users.models import Company
@@ -22,6 +32,7 @@ class Product(Model):
 
     name = CharField(_("Name of Product"), max_length=255)
     price = FloatField(_("price"), validators=[MinValueValidator(0.0)])
+    quantity = PositiveIntegerField(_("quantity"))
     description = TextField(_("description"), blank=True, null=True)
     is_approved = BooleanField(
         _("approved"),
