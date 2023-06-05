@@ -2,9 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from bigstore_api.addresses.api.serializers import AddressSerializer
 from bigstore_api.addresses.models import Address
-
-from .serializers import AddressSerializer
 
 
 class AddressViewSet(ModelViewSet):
@@ -12,24 +11,14 @@ class AddressViewSet(ModelViewSet):
     queryset = Address.objects.all()
     lookup_field = "pk"
 
-    def list(self, request, *args, **kwargs):
-        onlyaddressuser = Address.objects.filter(user=self.request.user)
-        serializer = AddressSerializer(onlyaddressuser, many=True)
-        return Response(serializer.data)
+    def get_queryset(self, *args, **kwargs):
+        assert isinstance(self.request.user.id, int)
+        return self.queryset.filter(user=self.request.user.id)
 
     def create(self, request, *args, **kwargs):
-        try:
-            new_address = Address.objects.create(
-                user=request.user,
-                postal_code=request.data["postal_code"],
-                uf=request.data["uf"],
-                neighborhood=request.data["neighborhood"],
-                street=request.data["street"],
-                number=request.data["number"],
-                complement=request.data["complement"],
-            )
-            new_address.save()
-            return Response({"detail": "Address Created, successfully! 🧁."}, status=status.HTTP_201_CREATED)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        except IndexError:
-            return Response({"detail": "Erro HTTP 400 - Invalid Request"}, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save(user=request.user)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
