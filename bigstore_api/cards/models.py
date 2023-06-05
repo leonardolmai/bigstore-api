@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.db.models import CASCADE, CharField, ForeignKey, Model
+from django.db.models import CASCADE, CharField, ForeignKey, Model, UniqueConstraint
 from django.utils.translation import gettext_lazy as _
 
 
@@ -10,3 +10,6 @@ class Card(Model):
     expiration_month = CharField(_("expiration month"), max_length=2)
     expiration_year = CharField(_("expiration year"), max_length=4)
     cvc = CharField("CVC", max_length=4, blank=False)
+
+    class Meta:
+        constraints = [UniqueConstraint(fields=["user", "number"], name="unique_user_number")]
