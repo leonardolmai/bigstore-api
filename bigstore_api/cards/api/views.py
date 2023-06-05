@@ -1,4 +1,5 @@
-from rest_framework import status
+from django.db import IntegrityError
+from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -19,6 +20,9 @@ class CardViewSet(ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        serializer.save(user=request.user)
+        try:
+            serializer.save(user=request.user)
+        except IntegrityError:
+            raise serializers.ValidationError("Card with this number already exists in your account.")
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
