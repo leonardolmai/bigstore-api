@@ -89,6 +89,7 @@ LOCAL_APPS = [
     # Your stuff: custom apps go here
     "bigstore_api.products",
     "bigstore_api.addresses",
+    "bigstore_api.cards",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
