@@ -5,8 +5,9 @@ from bigstore_api.users.api.serializers import UserSerializer
 
 
 class CardSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(required=False)
 
     class Meta:
         model = Card
-        fields = ("id", "user", "name", "number", "expiration_month", "expiration_year", "cvc")
+        fields = ["id", "user", "name", "number", "expiration_month", "expiration_year", "cvc"]
+        read_only_fields = ["id", "user"]
