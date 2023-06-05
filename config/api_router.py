@@ -13,7 +13,6 @@ else:
 router.register("users", UserViewSet)
 router.register("companies", CompanyViewSet)
 router.register("products", ProductViewSet)
-
 router.register("cards", CardViewSet)
 
 
