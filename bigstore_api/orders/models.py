@@ -39,6 +39,11 @@ class Order(Model):
         default=False,
         help_text=_("Designates whether this order has been returned."),
     )
+    is_canceled = BooleanField(
+        _("canceled"),
+        default=False,
+        help_text=_("Designates whether this order has been canceled."),
+    )
     created_at = DateTimeField(_("created at"), auto_now_add=True)
     payment_method = CharField(
         _("payment method"),
