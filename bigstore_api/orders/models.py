@@ -3,7 +3,6 @@ from django.core.validators import MinValueValidator
 from django.db.models import (
     CASCADE,
     DO_NOTHING,
-    BooleanField,
     CharField,
     DateTimeField,
     DecimalField,
@@ -21,6 +20,15 @@ from bigstore_api.users.models import Company
 
 
 class Order(Model):
+    STATUS_CHOICES = (
+        ("pending", _("Pending")),
+        ("processing", _("Processing")),
+        ("shipped", _("Shipped")),
+        ("delivered", _("Delivered")),
+        ("returned", _("Returned")),
+        ("canceled", _("Canceled")),
+    )
+
     PAYMENT_METHOD_CHOICES = (
         ("card", _("Card")),
         ("pix", _("Pix")),
@@ -29,20 +37,11 @@ class Order(Model):
 
     user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE, related_name="orders")
     company = ForeignKey(Company, on_delete=CASCADE, related_name="orders")
-    is_delivered = BooleanField(
-        _("delivered"),
-        default=False,
-        help_text=_("Designates whether this order has been delivered."),
-    )
-    is_returned = BooleanField(
-        _("returned"),
-        default=False,
-        help_text=_("Designates whether this order has been returned."),
-    )
-    is_canceled = BooleanField(
-        _("canceled"),
-        default=False,
-        help_text=_("Designates whether this order has been canceled."),
+    status = CharField(
+        _("status"),
+        choices=STATUS_CHOICES,
+        default="pending",
+        max_length=max(len(choice[0]) for choice in STATUS_CHOICES),
     )
     created_at = DateTimeField(_("created at"), auto_now_add=True)
     payment_method = CharField(
