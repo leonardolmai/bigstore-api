@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from bigstore_api.users.api.permissions import IsBigstore, IsCompany, IsCustomer, IsEmployee, IsEmployeeBigstore
 from bigstore_api.users.models import Company, UserCompany
 
 from .serializers import CompanySerializer, UserSerializer
@@ -31,6 +32,23 @@ class UserViewSet(ModelViewSet):
     def me(self, request):
         serializer = UserSerializer(request.user, context={"request": request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+    @action(detail=False)
+    def type(self, request):
+        if IsBigstore().has_permission(request, self):
+            userType = "Bigstore"
+        elif IsCompany().has_permission(request, self):
+            userType = "Company"
+        elif IsEmployeeBigstore().has_permission(request, self):
+            userType = "Employee (Bigstore)"
+        elif IsEmployee().has_permission(request, self):
+            userType = "Employee"
+        elif IsCustomer().has_permission(request, self):
+            userType = "Customer"
+        else:
+            userType = "Normal User"
+
+        return Response(status=status.HTTP_200_OK, data={"type": userType})
 
 
 class CompanyViewSet(ModelViewSet):
