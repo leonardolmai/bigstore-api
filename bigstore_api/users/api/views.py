@@ -37,14 +37,14 @@ class UserViewSet(ModelViewSet):
     def type(self, request):
         if IsBigstore().has_permission(request, self):
             userType = "Bigstore"
-        elif IsCompany().has_permission(request, self):
-            userType = "Company"
         elif IsEmployeeBigstore().has_permission(request, self):
             userType = "Employee (Bigstore)"
         elif IsEmployee().has_permission(request, self):
             userType = "Employee"
         elif IsCustomer().has_permission(request, self):
             userType = "Customer"
+        elif IsCompany().has_permission(request, self):
+            userType = "Company"
         else:
             userType = "Normal User"
 
