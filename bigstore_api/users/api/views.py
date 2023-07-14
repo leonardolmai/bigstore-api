@@ -39,12 +39,12 @@ class UserViewSet(ModelViewSet):
             userType = "Bigstore"
         elif IsEmployeeBigstore().has_permission(request, self):
             userType = "Employee (Bigstore)"
-        elif IsEmployee().has_permission(request, self):
-            userType = "Employee"
         elif IsCustomer().has_permission(request, self):
             userType = "Customer"
         elif IsCompany().has_permission(request, self):
             userType = "Company"
+        elif IsEmployee().has_permission(request, self):
+            userType = "Employee"
         else:
             userType = "Normal User"
 
