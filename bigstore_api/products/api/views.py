@@ -8,6 +8,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from bigstore_api.products.api.serializers import ProductSerializer
 from bigstore_api.products.models import Product, ProductImage
+from bigstore_api.users.api.permissions import IsBigstore, IsEmployee, IsEmployeeBigstore
 from bigstore_api.users.models import Company
 
 
@@ -16,6 +17,7 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     lookup_field = "pk"
     parser_classes = [MultiPartParser, FormParser]
+    permission_classes = [IsBigstore | IsEmployee]
 
     def get_queryset(self, *args, **kwargs):
         company_cnpj = self.request.headers.get("x-company-cnpj")
@@ -23,6 +25,8 @@ class ProductViewSet(ModelViewSet):
             company = Company.objects.get(cnpj=company_cnpj)
         except Company.DoesNotExist:
             raise serializers.ValidationError("Invalid company CNPJ")
+        if IsBigstore().has_permission(self.request, self) or IsEmployeeBigstore().has_permission(self.request, self):
+            return self.queryset
         return self.queryset.filter(company=company)
 
     def get_permissions(self):
