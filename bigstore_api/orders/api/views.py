@@ -45,7 +45,8 @@ class OrderViewSet(ReadOnlyModelViewSet, CreateModelMixin, UpdateModelMixin):
                     {"detail": "Card ID is required for card payment."}, status=status.HTTP_400_BAD_REQUEST
                 )
 
-            card = get_object_or_404(Card, id=card_id, user=user)
+            if card_id:
+                card = get_object_or_404(Card, id=card_id, user=user)
 
             address = get_object_or_404(Address, id=address_id, user=user)
 
