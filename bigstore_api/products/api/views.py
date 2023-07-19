@@ -34,6 +34,14 @@ class ProductViewSet(ModelViewSet):
             return [AllowAny()]
         return super().get_permissions()
 
+    def update(self, request, *args, **kwargs):
+        if not IsEmployeeBigstore().has_permission(request, self) and not IsBigstore().has_permission(request, self):
+            updated_data = request.data.copy()
+            updated_data["is_approved"] = False
+            request._full_data = updated_data
+
+        return super().update(request, *args, **kwargs)
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -61,6 +69,9 @@ class ProductViewSet(ModelViewSet):
 
             for image in images:
                 ProductImage.objects.create(product=product, image=image)
+
+            product.is_approved = False
+            product.save()
 
             return Response(self.get_serializer(product).data, status=status.HTTP_201_CREATED)
         elif request.method == "DELETE":
