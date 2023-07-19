@@ -61,6 +61,5 @@ class OrderItem(Model):
     price = FloatField(_("price"), validators=[MinValueValidator(0.0)])
     quantity = PositiveIntegerField(_("quantity"), validators=[MinValueValidator(1)])
 
-
-class Meta:
-    constraints = [UniqueConstraint(fields=["order", "product"], name="unique_order_product")]
+    class Meta:
+        constraints = [UniqueConstraint(fields=["order", "product"], name="unique_order_product")]
