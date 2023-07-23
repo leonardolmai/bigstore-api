@@ -58,7 +58,18 @@ class CompanyViewSet(ModelViewSet):
 
     def get_queryset(self, *args, **kwargs):
         assert isinstance(self.request.user.id, int)
+        if IsBigstore().has_permission(self.request, self) or IsEmployeeBigstore().has_permission(self.request, self):
+            return self.queryset
         return self.queryset.filter(owner=self.request.user.id)
+
+    @action(detail=False)
+    def me(self, request):
+        assert isinstance(self.request.user.id, int)
+        company = self.queryset.filter(owner=self.request.user.id)
+        if company:
+            serializer = CompanySerializer(company, context={"request": request}, many=True)
+            return Response(status=status.HTTP_200_OK, data=serializer.data)
+        return Response(status=status.HTTP_404_NOT_FOUND, data=company)
 
     @action(detail=True, methods=["GET", "POST", "DELETE"])
     def employees(self, request, pk):
