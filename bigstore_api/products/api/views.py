@@ -8,6 +8,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from bigstore_api.products.api.serializers import ProductSerializer
 from bigstore_api.products.models import Product, ProductImage
+from bigstore_api.users.api.permissions import IsBigstore, IsEmployee, IsEmployeeBigstore
 from bigstore_api.users.models import Company
 
 
@@ -16,6 +17,7 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     lookup_field = "pk"
     parser_classes = [MultiPartParser, FormParser]
+    permission_classes = [IsBigstore | IsEmployee]
 
     def get_queryset(self, *args, **kwargs):
         company_cnpj = self.request.headers.get("x-company-cnpj")
@@ -23,12 +25,22 @@ class ProductViewSet(ModelViewSet):
             company = Company.objects.get(cnpj=company_cnpj)
         except Company.DoesNotExist:
             raise serializers.ValidationError("Invalid company CNPJ")
+        if IsBigstore().has_permission(self.request, self) or IsEmployeeBigstore().has_permission(self.request, self):
+            return self.queryset
         return self.queryset.filter(company=company)
 
     def get_permissions(self):
         if self.action == "list" or self.action == "retrieve":
             return [AllowAny()]
         return super().get_permissions()
+
+    def update(self, request, *args, **kwargs):
+        if not IsEmployeeBigstore().has_permission(request, self) and not IsBigstore().has_permission(request, self):
+            updated_data = request.data.copy()
+            updated_data["is_approved"] = False
+            request._full_data = updated_data
+
+        return super().update(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -57,6 +69,9 @@ class ProductViewSet(ModelViewSet):
 
             for image in images:
                 ProductImage.objects.create(product=product, image=image)
+
+            product.is_approved = False
+            product.save()
 
             return Response(self.get_serializer(product).data, status=status.HTTP_201_CREATED)
         elif request.method == "DELETE":

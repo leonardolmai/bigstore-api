@@ -1,6 +1,7 @@
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers, status
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
@@ -10,6 +11,7 @@ from bigstore_api.cards.models import Card
 from bigstore_api.orders.api.serializers import OrderSerializer
 from bigstore_api.orders.models import Order, OrderItem
 from bigstore_api.products.models import Product
+from bigstore_api.users.api.permissions import IsEmployee
 from bigstore_api.users.models import Company
 
 
@@ -23,7 +25,34 @@ class OrderViewSet(ReadOnlyModelViewSet, CreateModelMixin, UpdateModelMixin):
             company = Company.objects.get(cnpj=company_cnpj)
         except Company.DoesNotExist:
             raise serializers.ValidationError("Invalid company CNPJ")
+        if IsEmployee().has_permission(self.request, self):
+            return Order.objects.filter(company=company)
         return Order.objects.filter(company=company, user=self.request.user.id)
+
+    def update(self, request, *args, **kwargs):
+        new_status = request.data.get("status")
+
+        if IsEmployee().has_permission(request, self):
+            if "status" in request.data:
+                order = self.get_object()
+                order.status = new_status
+                order.save(update_fields=["status"])
+                return Response(OrderSerializer(order).data, status=status.HTTP_200_OK)
+            raise PermissionDenied("You can only update the status field as an employee.")
+
+        non_cancellable_statuses = ["shipped", "delivered", "returned", "canceled"]
+        valid_statuses = [status for status, _ in Order.STATUS_CHOICES]
+        if new_status not in valid_statuses:
+            raise PermissionDenied(f'Invalid status "{new_status}" provided for update.')
+
+        if new_status == "canceled":
+            order = self.get_object()
+            if order.status in non_cancellable_statuses:
+                raise PermissionDenied("You are not allowed to update the status of this order.")
+            order.status = new_status
+            order.save(update_fields=["status"])
+            return Response(OrderSerializer(order).data, status=status.HTTP_200_OK)
+        raise PermissionDenied("You can only update the status field to canceled as a customer.")
 
     def create(self, request, *args, **kwargs):
         with transaction.atomic():
@@ -45,7 +74,8 @@ class OrderViewSet(ReadOnlyModelViewSet, CreateModelMixin, UpdateModelMixin):
                     {"detail": "Card ID is required for card payment."}, status=status.HTTP_400_BAD_REQUEST
                 )
 
-            card = get_object_or_404(Card, id=card_id, user=user)
+            if card_id:
+                card = get_object_or_404(Card, id=card_id, user=user)
 
             address = get_object_or_404(Address, id=address_id, user=user)
 

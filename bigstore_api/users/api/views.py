@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from bigstore_api.users.api.permissions import IsBigstore, IsCompany, IsCustomer, IsEmployee, IsEmployeeBigstore
 from bigstore_api.users.models import Company, UserCompany
 
 from .serializers import CompanySerializer, UserSerializer
@@ -32,6 +33,23 @@ class UserViewSet(ModelViewSet):
         serializer = UserSerializer(request.user, context={"request": request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
+    @action(detail=False)
+    def type(self, request):
+        if IsBigstore().has_permission(request, self):
+            userType = "Bigstore"
+        elif IsEmployeeBigstore().has_permission(request, self):
+            userType = "Employee (Bigstore)"
+        elif IsCustomer().has_permission(request, self):
+            userType = "Customer"
+        elif IsCompany().has_permission(request, self):
+            userType = "Company"
+        elif IsEmployee().has_permission(request, self):
+            userType = "Employee"
+        else:
+            userType = "Normal User"
+
+        return Response(status=status.HTTP_200_OK, data={"type": userType})
+
 
 class CompanyViewSet(ModelViewSet):
     serializer_class = CompanySerializer
@@ -40,7 +58,18 @@ class CompanyViewSet(ModelViewSet):
 
     def get_queryset(self, *args, **kwargs):
         assert isinstance(self.request.user.id, int)
+        if IsBigstore().has_permission(self.request, self) or IsEmployeeBigstore().has_permission(self.request, self):
+            return self.queryset
         return self.queryset.filter(owner=self.request.user.id)
+
+    @action(detail=False)
+    def me(self, request):
+        assert isinstance(self.request.user.id, int)
+        company = self.queryset.filter(owner=self.request.user.id)
+        if company:
+            serializer = CompanySerializer(company, context={"request": request}, many=True)
+            return Response(status=status.HTTP_200_OK, data=serializer.data)
+        return Response(status=status.HTTP_404_NOT_FOUND, data=company)
 
     @action(detail=True, methods=["GET", "POST", "DELETE"])
     def employees(self, request, pk):
