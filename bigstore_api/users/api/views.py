@@ -56,7 +56,30 @@ class UserViewSet(ModelViewSet):
         return Response(status=status.HTTP_200_OK, data={"type": userType})
 
 
-class EmployeeAddedObserver:
+class EmployeeSubject:
+    def __init__(self):
+        self._observers = []
+
+    def register_observer(self, observer):
+        self._observers.append(observer)
+
+    def unregister_observer(self, observer):
+        self._observers.remove(observer)
+
+    def notify_observers(self, data):
+        for observer in self._observers:
+            observer.update(data)
+
+
+class EmployeeObserver:
+    def update(self, data):
+        employee_emails = data.get("employee_emails")
+        company_name = data.get("company_name")
+
+        if employee_emails and company_name:
+            for employee_email in employee_emails:
+                self.send_email_to_employee(employee_email, company_name)
+
     def send_email_to_employee(self, employee_email, company_name):
         smtp_server = settings.EMAIL_HOST
         smtp_port = settings.EMAIL_PORT
@@ -76,19 +99,17 @@ class EmployeeAddedObserver:
             server.login(sender_email, sender_password)
             server.sendmail(sender_email, employee_email, message.as_string())
 
-    def update(self, data):
-        employee_emails = data.get("employee_emails")
-        company_name = data.get("company_name")
-
-        if employee_emails and company_name:
-            for employee_email in employee_emails:
-                self.send_email_to_employee(employee_email, company_name)
-
 
 class CompanyViewSet(ModelViewSet):
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
     lookup_field = "pk"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.subject = EmployeeSubject()
+        self.observer = EmployeeObserver()
+        self.subject.register_observer(self.observer)
 
     def get_queryset(self, *args, **kwargs):
         assert isinstance(self.request.user.id, int)
@@ -135,7 +156,7 @@ class CompanyViewSet(ModelViewSet):
                 else:
                     user_company.is_employee = True
                     user_company.save()
-                    observer = EmployeeAddedObserver()
+
                     employee_emails = list(
                         company.users.filter(is_employee=True).values_list("user__email", flat=True)
                     )
@@ -143,16 +164,17 @@ class CompanyViewSet(ModelViewSet):
                         "employee_emails": employee_emails,
                         "company_name": company.name,
                     }
-                    observer.update(data)
+                    self.subject.notify_observers(data)
+
                     return Response({"detail": "Employee added successfully."}, status=status.HTTP_201_CREATED)
             except UserCompany.DoesNotExist:
-                observer = EmployeeAddedObserver()
                 employee_emails = list(company.users.filter(is_employee=True).values_list("user__email", flat=True))
                 data = {
                     "employee_emails": employee_emails,
                     "company_name": company.name,
                 }
-                observer.update(data)
+                self.subject.notify_observers(data)
+
                 return Response({"detail": "Employee added successfully."}, status=status.HTTP_201_CREATED)
         elif request.method == "DELETE":
             if user == company.owner:
@@ -162,11 +184,11 @@ class CompanyViewSet(ModelViewSet):
                 )
 
             UserCompany.objects.filter(user=user, company=company, is_employee=True).update(is_employee=False)
-            observer = EmployeeAddedObserver()
             employee_emails = list(company.users.filter(is_employee=True).values_list("user__email", flat=True))
             data = {
                 "employee_emails": employee_emails,
                 "company_name": company.name,
             }
-            observer.update(data)
+            self.subject.notify_observers(data)
+
             return Response({"detail": "Employee removed successfully."}, status=status.HTTP_204_NO_CONTENT)
