@@ -1,3 +1,8 @@
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework import status
@@ -51,17 +56,6 @@ class UserViewSet(ModelViewSet):
         return Response(status=status.HTTP_200_OK, data={"type": userType})
 
 
-from django.conf import settings
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from bigstore_api.users.models import Company
-
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from django.conf import settings
-
 class EmployeeAddedObserver:
     def send_email_to_employee(self, employee_email, company_name):
         smtp_server = settings.EMAIL_HOST
@@ -69,7 +63,7 @@ class EmployeeAddedObserver:
         sender_email = settings.EMAIL_HOST_USER
         sender_password = settings.EMAIL_HOST_PASSWORD
 
-        subject = f"Bem-vindo à empresa {company_name}"
+        subject = f"Atualização no quadro de funcionários da {company_name}"
         body = f"Foi atualizado ambiente de funcionários da empresa {company_name}. "
         message = MIMEMultipart()
         message["From"] = sender_email
@@ -89,7 +83,8 @@ class EmployeeAddedObserver:
         if employee_emails and company_name:
             for employee_email in employee_emails:
                 self.send_email_to_employee(employee_email, company_name)
-            
+
+
 class CompanyViewSet(ModelViewSet):
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
@@ -141,12 +136,13 @@ class CompanyViewSet(ModelViewSet):
                     user_company.is_employee = True
                     user_company.save()
                     observer = EmployeeAddedObserver()
-                    employee_emails = list(company.users.filter(is_employee=True).values_list("user__email", flat=True))
+                    employee_emails = list(
+                        company.users.filter(is_employee=True).values_list("user__email", flat=True)
+                    )
                     data = {
                         "employee_emails": employee_emails,
                         "company_name": company.name,
                     }
-                    print(data)
                     observer.update(data)
                     return Response({"detail": "Employee added successfully."}, status=status.HTTP_201_CREATED)
             except UserCompany.DoesNotExist:
@@ -156,12 +152,10 @@ class CompanyViewSet(ModelViewSet):
                     "employee_emails": employee_emails,
                     "company_name": company.name,
                 }
-                print(data)
                 observer.update(data)
                 return Response({"detail": "Employee added successfully."}, status=status.HTTP_201_CREATED)
         elif request.method == "DELETE":
             if user == company.owner:
-                
                 return Response(
                     {"detail": "The company owner cannot be removed as an employee."},
                     status=status.HTTP_400_BAD_REQUEST,
@@ -170,9 +164,9 @@ class CompanyViewSet(ModelViewSet):
             UserCompany.objects.filter(user=user, company=company, is_employee=True).update(is_employee=False)
             observer = EmployeeAddedObserver()
             employee_emails = list(company.users.filter(is_employee=True).values_list("user__email", flat=True))
-            data = {"employee_emails": employee_emails,
-                    "company_name": company.name,
-                    }
-            print(data)
-            observer.update(data)    
+            data = {
+                "employee_emails": employee_emails,
+                "company_name": company.name,
+            }
+            observer.update(data)
             return Response({"detail": "Employee removed successfully."}, status=status.HTTP_204_NO_CONTENT)
