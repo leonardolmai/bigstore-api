@@ -1,0 +1,531 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-06-10 13:36-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bigstore_api/addresses/apps.py:8
+msgid "Addresses"
+msgstr ""
+
+#: bigstore_api/addresses/models.py:8
+msgid "postal code"
+msgstr ""
+
+#: bigstore_api/addresses/models.py:10
+msgid "city"
+msgstr ""
+
+#: bigstore_api/addresses/models.py:11
+msgid "neighborhood"
+msgstr ""
+
+#: bigstore_api/addresses/models.py:12
+msgid "street"
+msgstr ""
+
+#: bigstore_api/addresses/models.py:13
+msgid "number"
+msgstr ""
+
+#: bigstore_api/addresses/models.py:14
+msgid "complement"
+msgstr ""
+
+#: bigstore_api/cards/apps.py:8
+msgid "Cards"
+msgstr ""
+
+#: bigstore_api/cards/models.py:8
+msgid "Cardholder"
+msgstr ""
+
+#: bigstore_api/cards/models.py:9
+msgid "card number"
+msgstr ""
+
+#: bigstore_api/cards/models.py:10
+msgid "expiration month"
+msgstr ""
+
+#: bigstore_api/cards/models.py:11
+msgid "expiration year"
+msgstr ""
+
+#: bigstore_api/orders/apps.py:8
+msgid "Orders"
+msgstr ""
+
+#: bigstore_api/orders/models.py:24
+msgid "Pending"
+msgstr "Pendente"
+
+#: bigstore_api/orders/models.py:25
+msgid "Processing"
+msgstr "Processando"
+
+#: bigstore_api/orders/models.py:26
+msgid "Shipped"
+msgstr "Enviado"
+
+#: bigstore_api/orders/models.py:27
+msgid "Delivered"
+msgstr "Entregue"
+
+#: bigstore_api/orders/models.py:28
+msgid "Returned"
+msgstr "Devolvido"
+
+#: bigstore_api/orders/models.py:29
+msgid "Canceled"
+msgstr "Cancelado"
+
+#: bigstore_api/orders/models.py:33
+msgid "Card"
+msgstr "Cartão"
+
+#: bigstore_api/orders/models.py:34
+msgid "Pix"
+msgstr "Pix"
+
+#: bigstore_api/orders/models.py:35
+msgid "Bank Slip"
+msgstr "Boleto Bancário"
+
+#: bigstore_api/orders/models.py:41
+msgid "status"
+msgstr ""
+
+#: bigstore_api/orders/models.py:46
+msgid "created at"
+msgstr ""
+
+#: bigstore_api/orders/models.py:48
+msgid "payment method"
+msgstr ""
+
+#: bigstore_api/orders/models.py:52
+msgid "payment details"
+msgstr ""
+
+#: bigstore_api/orders/models.py:53
+msgid "delivery address"
+msgstr ""
+
+#: bigstore_api/orders/models.py:54
+msgid "total"
+msgstr ""
+
+#: bigstore_api/orders/models.py:60 bigstore_api/products/models.py:33
+msgid "Name of Product"
+msgstr ""
+
+#: bigstore_api/orders/models.py:61 bigstore_api/products/models.py:34
+msgid "price"
+msgstr ""
+
+#: bigstore_api/orders/models.py:62 bigstore_api/products/models.py:35
+msgid "quantity"
+msgstr ""
+
+#: bigstore_api/products/apps.py:8
+msgid "Products"
+msgstr ""
+
+#: bigstore_api/products/models.py:21
+msgid "Electronics"
+msgstr "Eletrônicos"
+
+#: bigstore_api/products/models.py:22
+msgid "Clothing"
+msgstr "Vestuário"
+
+#: bigstore_api/products/models.py:23
+msgid "Home"
+msgstr "Casa"
+
+#: bigstore_api/products/models.py:24
+msgid "Health and Beauty"
+msgstr "Saúde e Beleza"
+
+#: bigstore_api/products/models.py:25
+msgid "Sports and Outdoors"
+msgstr "Esportes e Ar Livre"
+
+#: bigstore_api/products/models.py:26
+msgid "Books, Movies, and Music"
+msgstr "Livros, Filmes e Música"
+
+#: bigstore_api/products/models.py:27
+msgid "Toys and Games"
+msgstr "Brinquedos e Jogos"
+
+#: bigstore_api/products/models.py:28
+msgid "Automotive"
+msgstr "Automotivo"
+
+#: bigstore_api/products/models.py:29
+msgid "Furniture and Home Decor"
+msgstr "Móveis e Decoração"
+
+#: bigstore_api/products/models.py:30
+msgid "Office Supplies"
+msgstr "Material de Escritório"
+
+#: bigstore_api/products/models.py:36
+msgid "description"
+msgstr ""
+
+#: bigstore_api/products/models.py:38
+msgid "approved"
+msgstr ""
+
+#: bigstore_api/products/models.py:40
+msgid "Designates whether this product is approved by the large company."
+msgstr ""
+
+#: bigstore_api/products/models.py:45
+msgid "category"
+msgstr ""
+
+#: bigstore_api/products/models.py:51
+msgid "image"
+msgstr ""
+
+#: bigstore_api/templates/account/account_inactive.html:5
+#: bigstore_api/templates/account/account_inactive.html:8
+msgid "Account Inactive"
+msgstr ""
+
+#: bigstore_api/templates/account/account_inactive.html:10
+msgid "This account is inactive."
+msgstr ""
+
+#: bigstore_api/templates/account/email.html:7
+msgid "Account"
+msgstr ""
+
+#: bigstore_api/templates/account/email.html:10
+msgid "E-mail Addresses"
+msgstr ""
+
+#: bigstore_api/templates/account/email.html:13
+msgid "The following e-mail addresses are associated with your account:"
+msgstr ""
+
+#: bigstore_api/templates/account/email.html:27
+msgid "Verified"
+msgstr ""
+
+#: bigstore_api/templates/account/email.html:29
+msgid "Unverified"
+msgstr ""
+
+#: bigstore_api/templates/account/email.html:31
+msgid "Primary"
+msgstr ""
+
+#: bigstore_api/templates/account/email.html:37
+msgid "Make Primary"
+msgstr ""
+
+#: bigstore_api/templates/account/email.html:38
+msgid "Re-send Verification"
+msgstr ""
+
+#: bigstore_api/templates/account/email.html:39
+msgid "Remove"
+msgstr ""
+
+#: bigstore_api/templates/account/email.html:46
+msgid "Warning:"
+msgstr ""
+
+#: bigstore_api/templates/account/email.html:46
+msgid ""
+"You currently do not have any e-mail address set up. You should really add "
+"an e-mail address so you can receive notifications, reset your password, etc."
+msgstr ""
+
+#: bigstore_api/templates/account/email.html:51
+msgid "Add E-mail Address"
+msgstr ""
+
+#: bigstore_api/templates/account/email.html:56
+msgid "Add E-mail"
+msgstr ""
+
+#: bigstore_api/templates/account/email.html:66
+msgid "Do you really want to remove the selected e-mail address?"
+msgstr ""
+
+#: bigstore_api/templates/account/email_confirm.html:6
+#: bigstore_api/templates/account/email_confirm.html:10
+msgid "Confirm E-mail Address"
+msgstr ""
+
+#: bigstore_api/templates/account/email_confirm.html:16
+#, python-format
+msgid ""
+"Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
+"address for user %(user_display)s."
+msgstr ""
+
+#: bigstore_api/templates/account/email_confirm.html:20
+msgid "Confirm"
+msgstr ""
+
+#: bigstore_api/templates/account/email_confirm.html:27
+#, python-format
+msgid ""
+"This e-mail confirmation link expired or is invalid. Please <a "
+"href=\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+msgstr ""
+
+#: bigstore_api/templates/account/login.html:7
+#: bigstore_api/templates/account/login.html:11
+#: bigstore_api/templates/account/login.html:56
+#: bigstore_api/templates/base.html:72
+msgid "Sign In"
+msgstr ""
+
+#: bigstore_api/templates/account/login.html:17
+msgid "Please sign in with one of your existing third party accounts:"
+msgstr ""
+
+#: bigstore_api/templates/account/login.html:19
+#, python-format
+msgid ""
+"Or, <a href=\"%(signup_url)s\">sign up</a> for a %(site_name)s account and "
+"sign in below:"
+msgstr ""
+
+#: bigstore_api/templates/account/login.html:32
+msgid "or"
+msgstr ""
+
+#: bigstore_api/templates/account/login.html:41
+#, python-format
+msgid ""
+"If you have not created an account yet, then please <a "
+"href=\"%(signup_url)s\">sign up</a> first."
+msgstr ""
+
+#: bigstore_api/templates/account/login.html:55
+msgid "Forgot Password?"
+msgstr ""
+
+#: bigstore_api/templates/account/logout.html:5
+#: bigstore_api/templates/account/logout.html:8
+#: bigstore_api/templates/account/logout.html:17
+#: bigstore_api/templates/base.html:61
+msgid "Sign Out"
+msgstr ""
+
+#: bigstore_api/templates/account/logout.html:10
+msgid "Are you sure you want to sign out?"
+msgstr ""
+
+#: bigstore_api/templates/account/password_change.html:6
+#: bigstore_api/templates/account/password_change.html:9
+#: bigstore_api/templates/account/password_change.html:14
+#: bigstore_api/templates/account/password_reset_from_key.html:5
+#: bigstore_api/templates/account/password_reset_from_key.html:8
+#: bigstore_api/templates/account/password_reset_from_key_done.html:4
+#: bigstore_api/templates/account/password_reset_from_key_done.html:7
+msgid "Change Password"
+msgstr ""
+
+#: bigstore_api/templates/account/password_reset.html:7
+#: bigstore_api/templates/account/password_reset.html:11
+#: bigstore_api/templates/account/password_reset_done.html:6
+#: bigstore_api/templates/account/password_reset_done.html:9
+msgid "Password Reset"
+msgstr ""
+
+#: bigstore_api/templates/account/password_reset.html:16
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll send you "
+"an e-mail allowing you to reset it."
+msgstr ""
+
+#: bigstore_api/templates/account/password_reset.html:21
+msgid "Reset My Password"
+msgstr ""
+
+#: bigstore_api/templates/account/password_reset.html:24
+msgid "Please contact us if you have any trouble resetting your password."
+msgstr ""
+
+#: bigstore_api/templates/account/password_reset_done.html:15
+msgid ""
+"We have sent you an e-mail. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+
+#: bigstore_api/templates/account/password_reset_from_key.html:8
+msgid "Bad Token"
+msgstr ""
+
+#: bigstore_api/templates/account/password_reset_from_key.html:12
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
+"a>."
+msgstr ""
+
+#: bigstore_api/templates/account/password_reset_from_key.html:18
+msgid "change password"
+msgstr ""
+
+#: bigstore_api/templates/account/password_reset_from_key.html:21
+#: bigstore_api/templates/account/password_reset_from_key_done.html:8
+msgid "Your password is now changed."
+msgstr ""
+
+#: bigstore_api/templates/account/password_set.html:6
+#: bigstore_api/templates/account/password_set.html:9
+#: bigstore_api/templates/account/password_set.html:14
+msgid "Set Password"
+msgstr ""
+
+#: bigstore_api/templates/account/signup.html:6
+msgid "Signup"
+msgstr ""
+
+#: bigstore_api/templates/account/signup.html:9
+#: bigstore_api/templates/account/signup.html:19
+#: bigstore_api/templates/base.html:67
+msgid "Sign Up"
+msgstr ""
+
+#: bigstore_api/templates/account/signup.html:11
+#, python-format
+msgid ""
+"Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
+msgstr ""
+
+#: bigstore_api/templates/account/signup_closed.html:5
+#: bigstore_api/templates/account/signup_closed.html:8
+msgid "Sign Up Closed"
+msgstr ""
+
+#: bigstore_api/templates/account/signup_closed.html:10
+msgid "We are sorry, but the sign up is currently closed."
+msgstr ""
+
+#: bigstore_api/templates/account/verification_sent.html:5
+#: bigstore_api/templates/account/verification_sent.html:8
+#: bigstore_api/templates/account/verified_email_required.html:5
+#: bigstore_api/templates/account/verified_email_required.html:8
+msgid "Verify Your E-mail Address"
+msgstr ""
+
+#: bigstore_api/templates/account/verification_sent.html:10
+msgid ""
+"We have sent an e-mail to you for verification. Follow the link provided to "
+"finalize the signup process. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+
+#: bigstore_api/templates/account/verified_email_required.html:12
+msgid ""
+"This part of the site requires us to verify that\n"
+"you are who you claim to be. For this purpose, we require that you\n"
+"verify ownership of your e-mail address. "
+msgstr ""
+
+#: bigstore_api/templates/account/verified_email_required.html:16
+msgid ""
+"We have sent an e-mail to you for\n"
+"verification. Please click on the link inside this e-mail. Please\n"
+"contact us if you do not receive it within a few minutes."
+msgstr ""
+
+#: bigstore_api/templates/account/verified_email_required.html:20
+#, python-format
+msgid ""
+"<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-"
+"mail address</a>."
+msgstr ""
+
+#: bigstore_api/templates/base.html:57
+msgid "My Profile"
+msgstr ""
+
+#: bigstore_api/users/admin.py:17
+msgid "Personal info"
+msgstr ""
+
+#: bigstore_api/users/admin.py:19
+msgid "Permissions"
+msgstr ""
+
+#: bigstore_api/users/admin.py:30
+msgid "Important dates"
+msgstr ""
+
+#: bigstore_api/users/apps.py:7
+msgid "Users"
+msgstr ""
+
+#: bigstore_api/users/forms.py:28 bigstore_api/users/tests/test_forms.py:36
+msgid "This email has already been taken."
+msgstr ""
+
+#: bigstore_api/users/models.py:28
+msgid "Name of User"
+msgstr ""
+
+#: bigstore_api/users/models.py:31
+msgid "email address"
+msgstr ""
+
+#: bigstore_api/users/models.py:33
+msgid "phone"
+msgstr ""
+
+#: bigstore_api/users/models.py:62
+msgid "Name of Company"
+msgstr ""
+
+#: bigstore_api/users/models.py:64
+msgid "website"
+msgstr ""
+
+#: bigstore_api/users/models.py:67
+msgid "active"
+msgstr ""
+
+#: bigstore_api/users/models.py:71
+msgid ""
+"Designates whether this company should be treated as active. Unselect this "
+"instead of deleting company."
+msgstr ""
+
+#: bigstore_api/users/models.py:85
+msgid "employee"
+msgstr ""
+
+#: bigstore_api/users/models.py:87
+msgid ""
+"Designates whether the user is an employee or just a customer of the company."
+msgstr ""
+
+#: bigstore_api/users/views.py:23
+msgid "Information successfully updated"
+msgstr ""
